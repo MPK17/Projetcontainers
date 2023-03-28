@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  replicas: 3 # nombre de répliques
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: mpk17/my-web-app:latest # l'image de votre application
+        ports:
+        - containerPort: 80 # port utilisé par l'application
+        resources:
+          limits:
+            cpu: "1" # limite la quantité de CPU à 1 unité
+            memory: "256Mi" # limite la quantité de mémoire à 256 Mo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer # type de Service
+
